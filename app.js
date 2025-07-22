@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const session = require('express-session'); 
 const flash = require('connect-flash');
-const app = express();
+const app = express(); //testing
 
 // Database connection
 const db = mysql.createConnection({
