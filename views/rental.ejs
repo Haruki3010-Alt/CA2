@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <title>Supermarket App</title>
+  <title>C237 Car Rental</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">Supermarket App</a>
+        <a class="navbar-brand" href="/">C237 Car Rental</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -28,28 +28,28 @@
     </nav>
 
   <div class="container">
-    <p>Welcome, <%= user.username %> (<%= user.role %>)</p>
+    <p>Welcome, <%= users.name %> (<%= users.roles %>)</p>
     <br>
-    <div class="text-center"><h2>Products from Supermarket</h2></div>
+    <div class="text-center"><h2>Cars from C237 Car Rental</h2></div>
     <br>
     <table class="table table-hover small text-center">
       <thead>
           <tr>
-            <th width="100">Product Name</th>
-            <th width="100">Product Image</th>
-            <th width="50">Quantity</th>
-            <th width="50">Price</th>
-            <th width="50">Quantity</th>
-            <th width="50">Buy</th>
+            <th width="100">Car Name</th>
+            <th width="50">Car Price</th>
+            <th width="50">Car Status</th>
+            <th width="100">Car Image</th>
+            <th width="50">Rent</th>
           </tr>
       </thead>
       <tbody>
-        <% for(let i=0; i < products.length; i++) { %>
+        <% for(let i=0; i < cars.length; i++) { %>
           <tr>
-            <td><a href="/product/<%= products[i].productId %>" ><%= products[i].productName %></a></td>
-            <td><img src = "images/<%= products[i].image %>" width="20%"></td>
-            <td><%= products[i].quantity %></td>
-            <td>$<%= products[i].price.toFixed(2) %></td>
+            <td><a href="/product/<%= cars[i].id %>" ><%= cars[i].name %></a></td>
+            <td>$<%= cars[i].price.toFixed(2) %></td>
+            <td><%= cars[i].status %></td>
+            <td><img src = "images/<%= cars[i].image %>" width="20%"></td>
+        
             <!-- <td>
               <select id="role" name="role" class="form-control" >
                 <option value="1" selected >1</option>
@@ -60,9 +60,9 @@
               </select>
             </td> -->
             <!-- Buy Link -->
-            <!-- <td><a href="/buyProduct/<%#= products[i].productId %>" class="btn btn-primary mt-3">Buy</a></td> -->
+            <!-- <td><a href="/buyProduct/<%#= cars[i].id %>" class="btn btn-primary mt-3">Buy</a></td> -->
             <td>
-              <select class="form-control" onchange="document.getElementById('quantity-<%= products[i].productId %>').value = this.value">
+              <select class="form-control" onchange="document.getElementById('quantity-<%= cars[i].id %>').value = this.value">
                 <% for (let q = 1; q <= 5; q++) { %>
                   <option value="<%= q %>"><%= q %></option>
                 <% } %>
@@ -70,9 +70,9 @@
             </td>
 
             <td>
-                <form action="/add-to-cart/<%= products[i].productId %>" method="POST">
-                  <input type="hidden" name="quantity" id="quantity-<%= products[i].productId %>" value="1">
-                  <button type="submit" class="btn btn-primary mt-3">Buy</button>
+                <form action="/add-to-cart/<%= cars[i].id %>" method="POST">
+                  <input type="hidden" name="quantity" id="quantity-<%= cars[i].id %>" value="1">
+                  <button type="submit" class="btn btn-primary mt-3">Rent</button>
                 </form>
             </td>
 
