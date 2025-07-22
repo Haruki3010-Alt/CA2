@@ -2,7 +2,18 @@ const express = require('express');
 const mysql = require('mysql2');
 const session = require('express-session'); 
 const flash = require('connect-flash');
+const multer = require('multer');
 const app = express(); //testing12
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images'); // Directory to save uploaded files
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname); 
+    }
+});
 
 // Database connection
 const db = mysql.createConnection({
@@ -89,7 +100,7 @@ app.post('/register', validateRegistration, (req, res) => {
     const { username, email, password, address, contact, license, role } = req.body;
 
     const sql = 'INSERT INTO users (username, email, password, address, contact, license, role) VALUES (?, ?, SHA1(?), ?, ?, ?, ?)';
-    connection.query(sql, [username, email, password, address, contact, license, role], (err, result) => {
+    db.query(sql, [username, email, password, address, contact, license, role], (err, result) => {
         if (err) {
             throw err;
         }
@@ -114,7 +125,7 @@ app.post('/login', (req, res) => {
     }
 
     const sql = 'SELECT * FROM users WHERE email = ? AND password = SHA1(?)';
-    connection.query(sql, [email, password], (err, results) => {
+    db.query(sql, [email, password], (err, results) => {
         if (err) {
             throw err;
         }
