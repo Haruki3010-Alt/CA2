@@ -35,8 +35,105 @@ app.use(flash());
 
 app.set('view engine', 'ejs');
 
-// Login & Signup
+// Home route
+// Define routes
+app.get('/',  (req, res) => {
+    res.render('index', {user: req.session.user} );
+});
 
+
+// Login & Signup
+// Middleware to check if user is logged in
+const checkAuthenticated = (req, res, next) => {
+    if (req.session.user) {
+        return next();
+    } else {
+        req.flash('error', 'Please log in to view this resource');
+        res.redirect('/login');
+    }
+};
+
+// Middleware to check if user is admin
+const checkAdmin = (req, res, next) => {
+    if (req.session.user.role === 'admin') {
+        return next();
+    } else {
+        req.flash('error', 'Access denied');
+        res.redirect('/shopping');
+    }
+};
+
+// Middleware for form validation
+const validateRegistration = (req, res, next) => {
+    const { username, email, password, address, contact, license, role } = req.body;
+
+    if (!username || !email || !password || !address || !contact || !license || !role) {
+        return res.status(400).send('All fields are required.');
+    }
+    
+    if (password.length < 8) {
+        req.flash('error', 'Password should be at least 8 or more characters long');
+        req.flash('formData', req.body);
+        return res.redirect('/register');
+    }
+    next();
+};
+
+//route for registration
+app.get('/register', (req, res) => {
+    res.render('register', { messages: req.flash('error'), formData: req.flash('formData')[0] });
+});
+
+app.post('/register', validateRegistration, (req, res) => {
+
+    const { username, email, password, address, contact, license, role } = req.body;
+
+    const sql = 'INSERT INTO users (username, email, password, address, contact, license, role) VALUES (?, ?, SHA1(?), ?, ?, ?, ?)';
+    connection.query(sql, [username, email, password, address, contact, license, role], (err, result) => {
+        if (err) {
+            throw err;
+        }
+        console.log(result);
+        req.flash('success', 'Registration successful! Please log in.');
+        res.redirect('/login');
+    });
+});
+
+//route for login
+app.get('/login', (req, res) => {
+    res.render('login', { messages: req.flash('success'), errors: req.flash('error') });
+});
+
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // Validate email and password
+    if (!email || !password) {
+        req.flash('error', 'All fields are required.');
+        return res.redirect('/login');
+    }
+
+    const sql = 'SELECT * FROM users WHERE email = ? AND password = SHA1(?)';
+    connection.query(sql, [email, password], (err, results) => {
+        if (err) {
+            throw err;
+        }
+
+        if (results.length > 0) {
+            // Successful login
+            req.session.user = results[0]; 
+            req.flash('success', 'Login successful!');
+            if(req.session.user.role == 'user')
+                res.redirect('/rental');
+            else
+                res.redirect('/inventory');
+        } else {
+            // Invalid credentials
+            req.flash('error', 'Invalid email or password.');
+            res.redirect('/login');
+        }
+    });
+});
 // Create Item
 
 // View Items
