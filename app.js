@@ -97,10 +97,10 @@ app.get('/register', (req, res) => {
 
 app.post('/register', validateRegistration, (req, res) => {
 
-    const { username, email, password, address, contact, license, role } = req.body;
+    const { username, email, password, address, contact, license, roles } = req.body;
 
-    const sql = 'INSERT INTO users (username, email, password, address, contact, license, role) VALUES (?, ?, SHA1(?), ?, ?, ?, ?)';
-    db.query(sql, [username, email, password, address, contact, license, role], (err, result) => {
+    const sql = 'INSERT INTO users (username, email, password, address, contact, license, roles) VALUES (?, ?, SHA1(?), ?, ?, ?, ?)';
+    db.query(sql, [username, email, password, address, contact, license, roles], (err, result) => {
         if (err) {
             throw err;
         }
