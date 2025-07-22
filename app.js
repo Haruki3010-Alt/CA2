@@ -1,6 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
-const session = require('express-session');
+const session = require('express-session'); 
 const flash = require('connect-flash');
 const app = express();
 
@@ -44,7 +44,18 @@ app.set('view engine', 'ejs');
 // Update Item
 
 // Delete Item
+app.post('/products/delete/:id', (req,res) => {
+    const productId = req.params.id;
 
+    const sql = 'DELETE FROM products WHERE id = ?';
+    db.query(sql, [productId], (err, result) => {
+        if (err) {
+            console.error('Error deleting product:', err);
+            return res.status(500).send('Error deleting');
+        }
+        res.redirect('/product'); 
+    });
+});
 // Search/Filter items
 
 // Starting the server
