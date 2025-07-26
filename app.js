@@ -15,6 +15,8 @@ const storage = multer.diskStorage({
     }
 });
 
+const upload = multer({ storage: storage });
+
 // Database connection
 const db = mysql.createConnection({
     host: 'k-a2-h.h.filess.io',
@@ -66,11 +68,11 @@ const checkAuthenticated = (req, res, next) => {
 
 // Middleware to check if user is admin
 const checkAdmin = (req, res, next) => {
-    if (req.session.user.role === 'admin') {
+    if (req.session.user.roles === 'admin') {
         return next();
     } else {
         req.flash('error', 'Access denied');
-        res.redirect('/shopping');
+        res.redirect('/rental');
     }
 };
 
@@ -137,7 +139,7 @@ app.post('/login', (req, res) => {
             if(req.session.user.role == 'user')
                 res.redirect('/rental');
             else
-                res.redirect('/inventory');
+                res.redirect('/carInventory');
         } else {
             // Invalid credentials
             req.flash('error', 'Invalid email or password.');
@@ -147,21 +149,58 @@ app.post('/login', (req, res) => {
 });
 // Create Item
 
+app.get('/addCar', checkAuthenticated, checkAdmin, (req, res) => {
+    res.render('addCar', {user: req.session.user } ); 
+});
+
+app.post('/addCar', upload.single('image'),  (req, res) => {
+    // Extract product data from the request body
+    const { name, price, status} = req.body;
+    let image;
+    if (req.file) {
+        image = req.file.filename; // Save only the filename
+    } else {
+        image = null;
+    }
+
+    const sql = 'INSERT INTO cars (name, price, status, image) VALUES (?, ?, ?, ?)';
+    // Insert the new product into the database
+    db.query(sql , [name, price, status, image], (error, results) => {
+        if (error) {
+            // Handle any error that occurs during the database operation
+            console.error("Error adding vehicle:", error);
+            res.status(500).send('Error adding vehicle');
+        } else {
+            // Send a success response
+            res.redirect('/carInventory');
+        }
+    });
+});
+
+app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
+    // Fetch data from MySQL
+    db.query('SELECT * FROM cars', (error, results) => {
+      if (error) throw error;
+      res.render('carInventory', { cars: results, user: req.session.user });
+    });
+}); 
+
+
 // View Items
 
 // Update Item
 
 // Delete Item
-app.post('/products/delete/:id', (req,res) => {
-    const productId = req.params.id;
+app.post('/car/delete/:id', (req,res) => {
+    const carId = req.params.id;
 
-    const sql = 'DELETE FROM products WHERE id = ?';
-    db.query(sql, [productId], (err, result) => {
+    const sql = 'DELETE FROM cars WHERE id = ?';
+    db.query(sql, [carId], (err, result) => {
         if (err) {
-            console.error('Error deleting product:', err);
+            console.error('Error deleting car:', err);
             return res.status(500).send('Error deleting');
         }
-        res.redirect('/product'); 
+        res.redirect('/carInventory'); 
     });
 });
 // Search/Filter items
