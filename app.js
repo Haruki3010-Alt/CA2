@@ -147,6 +147,11 @@ app.post('/login', (req, res) => {
         }
     });
 });
+// route for Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 // Create Item
 
 app.get('/addCar', checkAuthenticated, checkAdmin, (req, res) => {
