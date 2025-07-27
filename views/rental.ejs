@@ -43,25 +43,25 @@
           </tr>
       </thead>
       <tbody>
-        <% for(let i=0; i < cars.length; i++) { %>
+        <% for(let i=0; i < car.length; i++) { %>
           <tr>
-            <td><a href="/car/<%= cars[i].carID %>" ><%= cars[i].name %></a></td>
-            <td>$<%= cars[i].price.toFixed(2) %></td>
-            <td><%= cars[i].status %></td>
-            <td><img src = "images/<%= cars[i].image %>" width="20%"></td>
+            <td><a href="/car/<%= car[i].carID %>" ><%= car[i].name %></a></td>
+            <td>$<%= car[i].price.toFixed(2) %></td>
+            <td><%= car[i].status %></td>
+            <td><img src = "images/<%= car[i].image %>" width="20%"></td>
         
 
             <td>
-              <select class="form-control" onchange="document.getElementById('quantity-<%= cars[i].id %>').value = this.value">
+              <select class="form-control" onchange="document.getElementById('quantity-<%= car[i].cardID %>').value = this.value">
                 <% for (let q = 1; q <= 5; q++) { %>
                   <option value="<%= q %>"><%= q %></option>
                 <% } %>
               </select>
             </td>
-
+<!---->
             <td>
-                <form action="/add-to-cart/<%= cars[i].carID %>" method="POST">
-                  <input type="hidden" name="quantity" id="quantity-<%= cars[i].id %>" value="1">
+                <form action="/add-to-cart/<%= car[i].carID %>" method="POST">
+                  <input type="hidden" name="quantity" id="quantity-<%= car[i].carID %>" value="1">
                   <button type="submit" class="btn btn-primary mt-3">Rent</button>
                 </form>
             </td>
