@@ -202,7 +202,7 @@ app.get('/car/:id', checkAuthenticated, (req, res) => {
             return res.status(500).send('Error fetching car details');
         }
         if (result.length > 0) {
-            res.render('carDetails', { car: result[0], user: req.session.user });
+            res.render('car', { car: result[0], user: req.session.user });
         } else {
             res.status(404).send('Car not found');
         }
