@@ -216,7 +216,7 @@ app.get('/car/:id', checkAuthenticated, (req, res) => {
 app.post('/car/delete/:id', (req,res) => {
     const carID = req.params.id;
 
-    const sql = 'DELETE FROM cars WHERE id = ?';
+    const sql = 'DELETE FROM cars WHERE carID = ?';
     db.query(sql, [carID], (err, result) => {
         if (err) {
             console.error('Error deleting car:', err);
