@@ -193,10 +193,10 @@ app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
 
 // View Items
 app.get('/car/:id', checkAuthenticated, (req, res) => {
-    const carId = req.params.id;
+    const carID = req.params.id;
     const sql = 'SELECT * FROM cars WHERE carID = ?';
     
-    db.query(sql, [carId], (err, result) => {
+    db.query(sql, [carID], (err, result) => {
         if (err) {
             console.error('Error fetching car details:', err);
             return res.status(500).send('Error fetching car details');
@@ -214,10 +214,10 @@ app.get('/car/:id', checkAuthenticated, (req, res) => {
 
 // Delete Item
 app.post('/car/delete/:id', (req,res) => {
-    const carId = req.params.id;
+    const carID = req.params.id;
 
     const sql = 'DELETE FROM cars WHERE id = ?';
-    db.query(sql, [carId], (err, result) => {
+    db.query(sql, [carID], (err, result) => {
         if (err) {
             console.error('Error deleting car:', err);
             return res.status(500).send('Error deleting');
