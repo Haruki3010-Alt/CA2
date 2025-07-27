@@ -45,22 +45,12 @@
       <tbody>
         <% for(let i=0; i < cars.length; i++) { %>
           <tr>
-            <td><a href="/product/<%= cars[i].id %>" ><%= cars[i].name %></a></td>
+            <td><a href="/car/<%= cars[i].id %>" ><%= cars[i].name %></a></td>
             <td>$<%= cars[i].price.toFixed(2) %></td>
             <td><%= cars[i].status %></td>
             <td><img src = "images/<%= cars[i].image %>" width="20%"></td>
         
-            <!-- <td>
-              <select id="role" name="role" class="form-control" >
-                <option value="1" selected >1</option>
-                <option value="2" >2</option>
-                <option value="3" >3</option>
-                <option value="4" >4</option>
-                <option value="5" >5</option>
-              </select>
-            </td> -->
-            <!-- Buy Link -->
-            <!-- <td><a href="/buyProduct/<%#= cars[i].id %>" class="btn btn-primary mt-3">Buy</a></td> -->
+
             <td>
               <select class="form-control" onchange="document.getElementById('quantity-<%= cars[i].id %>').value = this.value">
                 <% for (let q = 1; q <= 5; q++) { %>
