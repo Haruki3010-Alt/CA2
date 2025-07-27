@@ -187,6 +187,23 @@ app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
 
 
 // View Items
+app.get('/car/:id', checkAuthenticated, (req, res) => {
+    const carId = req.params.id;
+    const sql = 'SELECT * FROM cars WHERE id = ?';
+    
+    db.query(sql, [carId], (err, result) => {
+        if (err) {
+            console.error('Error fetching car details:', err);
+            return res.status(500).send('Error fetching car details');
+        }
+        if (result.length > 0) {
+            res.render('carDetails', { car: result[0], user: req.session.user });
+        } else {
+            res.status(404).send('Car not found');
+        }
+    });
+});
+
 
 // Update Item
 
@@ -204,6 +221,14 @@ app.post('/car/delete/:id', (req,res) => {
     });
 });
 // Search/Filter items
+app.get('/rental', checkAuthenticated, (req, res) => {
+    db.query('SELECT * FROM cars WHERE status = "available"', (error, results) => {
+        if (error) throw error;
+        res.render('rental', { cars: results, user: req.session.user });
+    });
+});
+
+
 
 // Starting the server
 app.listen(3000, () => {
