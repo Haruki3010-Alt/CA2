@@ -46,14 +46,14 @@
       <tbody>
         <% for(let i=0; i < cars.length; i++) { %>
           <tr>
-            <td><a href="/car/<%= cars[i].carId %>" ><%= cars[i].name %></a></td>
+            <td><a href="/car/<%= cars[i].carID %>" ><%= cars[i].name %></a></td>
             <td><img src = "images/<%= cars[i].image %>" width="20%"></td>
             <td>$<%= cars[i].price.toFixed(2) %></td>
             <td><%= cars[i].status %></td>
             <!-- Edit Link -->
-            <td><a href="/updateCar/<%= cars[i].carId %>">Edit</a></td>
+            <td><a href="/updateCar/<%= cars[i].carID %>">Edit</a></td>
             <!-- Delete Link -->
-            <td><a href="/deleteCar/<%= cars[i].carId %>" onclick="return confirm('Are you sure you want to delete this car?')">Delete</a></td>
+            <td><a href="/deleteCar/<%= cars[i].carID %>" onclick="return confirm('Are you sure you want to delete this car?')">Delete</a></td>
           </tr>
         <% } %>
       </tbody>

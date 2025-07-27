@@ -147,6 +147,11 @@ app.post('/login', (req, res) => {
         }
     });
 });
+// route for Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 // Create Item
 
 app.get('/addCar', checkAuthenticated, checkAdmin, (req, res) => {
@@ -189,7 +194,7 @@ app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
 // View Items
 app.get('/car/:id', checkAuthenticated, (req, res) => {
     const carId = req.params.id;
-    const sql = 'SELECT * FROM cars WHERE id = ?';
+    const sql = 'SELECT * FROM cars WHERE carID = ?';
     
     db.query(sql, [carId], (err, result) => {
         if (err) {
