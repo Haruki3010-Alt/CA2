@@ -18,7 +18,7 @@
           </button>
           <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
-              <% if (users.role === "admin") { %>
+              <% if (user.role === "admin") { %>
                 <li class="nav-item">
                   <a class="nav-link" href="/carInventory">Inventory</a> 
                 </li> 
@@ -35,7 +35,7 @@
     </nav>
 
     <div class="container">
-        <p>Welcome, <%= users.name %> (<%= users.roles %>)</p>
+        <p>Welcome, <%= user.name %> (<%= user.roles %>)</p>
         <br>
         <div class="text-center"><h2>Car Details</h2></div>
         <br>
@@ -51,7 +51,7 @@
         <% } else { %>
             <p>No Car found.</p>
         <% } %>
-        <% if (users.role === "admin") { %>
+        <% if (user.role === "admin") { %>
           <a href ="/carInventory">Back</a>
           <form action="'/car/delete/<%= cars.carID %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this Car detail?');">
             <button type="submit" class="btn btn-danger">Delete Car</button>
