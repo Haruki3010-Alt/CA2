@@ -194,7 +194,7 @@ app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
 // View Items
 app.get('/car/:id', checkAuthenticated, (req, res) => {
     const carId = req.params.id;
-    const sql = 'SELECT * FROM cars WHERE id = ?';
+    const sql = 'SELECT * FROM cars WHERE carID = ?';
     
     db.query(sql, [carId], (err, result) => {
         if (err) {
