@@ -45,7 +45,7 @@
       <tbody>
         <% for(let i=0; i < cars.length; i++) { %>
           <tr>
-            <td><a href="/car/<%= cars[i].id %>" ><%= cars[i].name %></a></td>
+            <td><a href="/car/<%= cars[i].carID %>" ><%= cars[i].name %></a></td>
             <td>$<%= cars[i].price.toFixed(2) %></td>
             <td><%= cars[i].status %></td>
             <td><img src = "images/<%= cars[i].image %>" width="20%"></td>
@@ -60,7 +60,7 @@
             </td>
 
             <td>
-                <form action="/add-to-cart/<%= cars[i].id %>" method="POST">
+                <form action="/add-to-cart/<%= cars[i].carID %>" method="POST">
                   <input type="hidden" name="quantity" id="quantity-<%= cars[i].id %>" value="1">
                   <button type="submit" class="btn btn-primary mt-3">Rent</button>
                 </form>
