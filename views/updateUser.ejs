@@ -72,9 +72,9 @@
 
       <div class="mb-3">
         <label for="roles" class="form-label">Roles</label>
-        <select id="roles" name="roles" class="form-control" required>
-            <option value="user">>User</option>
-            <option value="admin">>Admin</option>
+        <select name="roles" class="form-select">
+            <option value="user" <%= users.roles === 'user' ? 'selected' : '' %>>User</option>
+            <option value="admin" <%= users.roles === 'admin' ? 'selected' : '' %>>Admin</option>
         </select>
       </div>
 
