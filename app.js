@@ -304,21 +304,14 @@ app.get('/rental', checkAuthenticated, (req, res) => {
 
 //Useradmin Panel
 app.get('/useradmin', checkAuthenticated, checkAdmin, (req, res) => {
-    const search = req.query.search;
     let sql = 'SELECT * FROM users';
     let params = [];
-
-    if (search) {
-        sql += ' WHERE name LIKE ?';
-        params.push('%' + search + '%');
-    }
 
     db.query(sql, params, (error, results) => {
         if (error) throw error;
         res.render('useradmin', {
             users: results,
-            user: req.session.user,
-            search: search || ''
+            user: req.session.user
         });
     });
 });
