@@ -27,7 +27,7 @@
       </div>
     </nav>
 
-  <form method="get" action="/carInventory" class="mb-4">
+  <form method="get" action="/useradmin" class="mb-4">
     <div class="input-group">
       <input type="text" name="search" class="form-control" placeholder="Search for another car..." value="<%= search || '' %>">
     <button class="btn btn-outline-primary" type="submit">Search</button>
@@ -37,7 +37,7 @@
   <div class="container">
     <p>Welcome, <%= user.username %> (<%= user.roles %>)</p>
     <br>
-    <div class="text-center"><h2>Cars from C237 Car Rental Database</h2></div>
+    <div class="text-center"><h2>Users from C237 Car Rental Database</h2></div>
     <br>
     <table class="table table-hover small text-center">
       <thead>
@@ -53,7 +53,7 @@
           </tr>
       </thead>
       <tbody>
-        <% for(let i=0; i < cars.length; i++) { %>
+        <% for(let i=0; i < users.length; i++) { %>
           <tr>
             <td><%= users[i].name %></td>
             <td><%= users[i].email %></td>
