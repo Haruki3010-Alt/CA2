@@ -355,7 +355,7 @@ app.post('/car/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
 
     const sql = image
         ? 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles =? WHERE id = ?'
-        : 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles = WHERE id = ?';
+        : 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles =? WHERE id = ?';
 
     const params = image
         ? [username, email, address, contact, license, roles, id]
