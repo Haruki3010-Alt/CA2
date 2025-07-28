@@ -268,7 +268,7 @@ app.post('/car/delete/:id', (req,res) => {
 app.get('/rental', checkAuthenticated, (req, res) => {
     db.query('SELECT * FROM cars WHERE status = "available"', (error, results) => {
         if (error) throw error;
-        res.render('rental', { cars: results, user: req.session.user });
+        res.render('rental', { car: results, user: req.session.user });
     });
 });
 
