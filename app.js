@@ -445,11 +445,61 @@ app.post('/cart/update/:id', checkAuthenticated, (req, res) => {
 
 
 app.post('/checkout', checkAuthenticated, (req, res) => {
-    // You can log rentals to DB here later
+    const cart = req.session.cart || [];
+    const user = req.session.user.username; // assumes 'username' is the display name
+
+    if (cart.length === 0) {
+        req.flash('error', 'Your cart is empty.');
+        return res.redirect('/cart');
+    }
+
+    const sql = 'INSERT INTO rentHistory (user, car, quantity, date) VALUES (?, ?, ?, NOW())';
+
+    for (let i = 0; i < cart.length; i++) {
+        db.query(sql, [user, cart[i].name, cart[i].quantity], (err, result) => {
+            if (err) {
+                console.error('Error saving rental history:', err);
+                return res.status(500).send('Error during checkout');
+            }
+        });
+    }
+
     req.session.cart = [];
     req.flash('success', 'Rental confirmed!');
     res.redirect('/rental');
 });
+
+app.get('/rentalHistory', checkAuthenticated, (req, res) => {
+    const user = req.session.user.username;
+    const sql = 'SELECT * FROM rentHistory WHERE user = ? ORDER BY date DESC';
+
+    db.query(sql, [user], (err, results) => {
+        if (err) {
+            console.error('Error fetching rental history:', err);
+            return res.status(500).send('Error retrieving history');
+        }
+        res.render('rentalHistory', {
+            history: results,
+            user: req.session.user
+        });
+    });
+});
+
+app.get('/adminRentalHistory', checkAuthenticated, checkAdmin, (req, res) => {
+    const sql = 'SELECT * FROM rentHistory ORDER BY date DESC';
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching admin rental history:', err);
+            return res.status(500).send('Error retrieving history');
+        }
+        res.render('adminRentalHistory', {
+            history: results,
+            user: req.session.user
+        });
+    });
+});
+
 
 
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Rental History</title>
+</head>
+<body>
+    <h1>Your Rental History</h1>
+
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Car</th>
+            <th>Quantity</th>
+            <th>Date</th>
+        </tr>
+        <% history.forEach(entry => { %>
+            <tr>
+                <td><%= entry.car %></td>
+                <td><%= entry.quantity %></td>
+                <td><%= new Date(entry.date).toLocaleString() %></td>
+            </tr>
+        <% }) %>
+    </table>
+
+    <a href="/rental">Back to Rental</a>
+</body>
+</html>
