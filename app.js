@@ -324,13 +324,8 @@ app.get('/useradmin', checkAuthenticated, checkAdmin, (req, res) => {
 });
 
 app.get('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
-    const search = req.query.search;
     const id = req.params.id;
     const sql = 'SELECT * FROM users WHERE id = ?';
-    if (search) {
-        sql += ' AND name LIKE ?';
-        params.push('%' + search + '%');
-    }
 
 
     db.query(sql, [id], (err, result) => {
