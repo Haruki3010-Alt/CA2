@@ -303,6 +303,52 @@ app.get('/rental', checkAuthenticated, (req, res) => {
     });
 });
 
+//Useradmin Panel
+app.get('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
+    const search = req.query.search;
+    const id = req.params.id;
+    const sql = 'SELECT * FROM users WHERE id = ?';
+    if (search) {
+        sql += ' AND name LIKE ?';
+        params.push('%' + search + '%');
+    }
+
+
+    db.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('Error fetching car for edit:', err);
+            return res.status(500).send('Error fetching car details');
+        }
+        if (result.length > 0) {
+            res.render('updateUser', { users: result[0], user: req.session.user, search: search || '' });
+        } else {
+            res.status(404).send('Car not found');
+        }
+    });
+});
+
+
+app.post('/car/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
+    const id = req.params.id;
+    const { username, email, address, contact, license, roles} = req.body;
+    let image = req.file ? req.file.filename : null;
+
+    const sql = image
+        ? 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles =? WHERE id = ?'
+        : 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles = WHERE id = ?';
+
+    const params = image
+        ? [username, email, address, contact, license, roles, id]
+        : [username, email, address, contact, license, roles, id];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            console.error('Error updating user:', err);
+            return res.status(500).send('Error updating user');
+        }
+        res.redirect('/useradmin');
+    });
+});
 
 
 
