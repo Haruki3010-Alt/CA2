@@ -299,8 +299,7 @@ app.get('/rental', checkAuthenticated, (req, res) => {
 
     db.query(sql, params, (error, results) => {
         if (error) throw error;
-        res.render('rental', { car: results, user: req.session.user, search: search || '' });
-    });
+        res.render('rental', { car: results, user: req.session.user, search: search || '',messages: req.flash('success')});});
 });
 
 //Useradmin Panel
