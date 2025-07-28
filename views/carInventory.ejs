@@ -63,7 +63,7 @@
             <!-- Edit Link -->
             <td><a href="/car/updateCar/<%= cars[i].carID %>">Edit</a></td>
             <!-- Delete Link -->
-            <td><a href="/car/deleteCar/<%= cars[i].carID %>" onclick="return confirm('Are you sure you want to delete this car?')">Delete</a></td>
+            <td><a href="/car/deleteCar/<%= cars[i].carID %>" method="POST" onclick="return confirm('Are you sure you want to delete this car?')">Delete</a></td>
           </tr>
         <% } %>
       </tbody>
