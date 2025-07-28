@@ -65,7 +65,7 @@
             <td><a href="/updateUser/<%= users[i].id %>">Edit</a></td>
             <!-- Delete Link -->
             <td>
-              <form action="/car/deleteUser/<%= users[i].id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this car?')">
+              <form action="/deleteUser/<%= users[i].id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this car?')">
                 <button type="submit" class="btn btn-link text-danger p-0">Delete</button>
               </form>
             </td>
