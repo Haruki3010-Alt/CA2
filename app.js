@@ -350,16 +350,10 @@ app.get('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
 
 app.post('/car/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
     const id = req.params.id;
-    const { username, email, address, contact, license, roles} = req.body;
-    let image = req.file ? req.file.filename : null;
+    const { username, email, address, contact, license, roles } = req.body;
 
-    const sql = image
-        ? 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles =? WHERE id = ?'
-        : 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license =?, roles =? WHERE id = ?';
-
-    const params = image
-        ? [username, email, address, contact, license, roles, id]
-        : [username, email, address, contact, license, roles, id];
+    const sql = 'UPDATE users SET username = ?, email = ?, address = ?, contact = ?, license = ?, roles = ? WHERE id = ?';
+    const params = [username, email, address, contact, license, roles, id];
 
     db.query(sql, params, (err, result) => {
         if (err) {
