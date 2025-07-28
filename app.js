@@ -225,6 +225,7 @@ app.get('/car/:id', checkAuthenticated, (req, res) => {
 
 // Update Item
 app.get('/car/updateCar/:id', checkAuthenticated, checkAdmin, (req, res) => {
+    const search = req.query.search;
     const carID = req.params.id;
     const sql = 'SELECT * FROM cars WHERE carID = ?';
     if (search) {
