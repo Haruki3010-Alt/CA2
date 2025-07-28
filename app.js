@@ -2,7 +2,7 @@ const express = require('express');
 const mysql = require('mysql2');
 const session = require('express-session'); 
 const flash = require('connect-flash');
-const app = express(); //testing
+const app = express(); 
 
 // Database connection
 const db = mysql.createConnection({
@@ -35,28 +35,192 @@ app.use(flash());
 
 app.set('view engine', 'ejs');
 
-// Login & Signup
+// Home route
+// Define routes
+app.get('/',  (req, res) => {
+    res.render('index', {user: req.session.user} );
+});
 
+
+// Login & Signup
+// Middleware to check if user is logged in
+const checkAuthenticated = (req, res, next) => {
+    if (req.session.user) {
+        return next();
+    } else {
+        req.flash('error', 'Please log in to view this resource');
+        res.redirect('/login');
+    }
+};
+
+// Middleware to check if user is admin
+const checkAdmin = (req, res, next) => {
+    if (req.session.user.roles === 'admin') {
+        return next();
+    } else {
+        req.flash('error', 'Access denied');
+        res.redirect('/rental');
+    }
+};
+
+// Middleware for form validation
+const validateRegistration = (req, res, next) => {
+    const { username, email, password, address, contact, license, roles } = req.body;
+
+    if (!username || !email || !password || !address || !contact || !license || !roles) {
+        return res.status(400).send('All fields are required.');
+    }
+    
+    if (password.length < 8) {
+        req.flash('error', 'Password should be at least 8 or more characters long');
+        req.flash('formData', req.body);
+        return res.redirect('/register');
+    }
+    next();
+};
+
+//route for registration
+app.get('/register', (req, res) => {
+    res.render('register', { messages: req.flash('error'), formData: req.flash('formData')[0] });
+});
+
+app.post('/register', validateRegistration, (req, res) => {
+
+    const { username, email, password, address, contact, license, roles } = req.body;
+
+    const sql = 'INSERT INTO users (username, email, password, address, contact, license, roles) VALUES (?, ?, SHA1(?), ?, ?, ?, ?)';
+    db.query(sql, [username, email, password, address, contact, license, roles], (err, result) => {
+        if (err) {
+            throw err;
+        }
+        console.log(result);
+        req.flash('success', 'Registration successful! Please log in.');
+        res.redirect('/login');
+    });
+});
+
+//route for login
+app.get('/login', (req, res) => {
+    res.render('login', { messages: req.flash('success'), errors: req.flash('error') });
+});
+
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // Validate email and password
+    if (!email || !password) {
+        req.flash('error', 'All fields are required.');
+        return res.redirect('/login');
+    }
+
+    const sql = 'SELECT * FROM users WHERE email = ? AND password = SHA1(?)';
+    db.query(sql, [email, password], (err, results) => {
+        if (err) {
+            throw err;
+        }
+
+        if (results.length > 0) {
+            // Successful login
+            req.session.user = results[0]; 
+            req.flash('success', 'Login successful!');
+            if(req.session.user.role == 'user')
+                res.redirect('/rental');
+            else
+                res.redirect('/carInventory');
+        } else {
+            // Invalid credentials
+            req.flash('error', 'Invalid email or password.');
+            res.redirect('/login');
+        }
+    });
+});
+// route for Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+});
 // Create Item
 
+app.get('/addCar', checkAuthenticated, checkAdmin, (req, res) => {
+    res.render('addCar', {user: req.session.user } ); 
+});
+
+app.post('/addCar', upload.single('image'),  (req, res) => {
+    // Extract product data from the request body
+    const { name, price, status} = req.body;
+    let image;
+    if (req.file) {
+        image = req.file.filename; // Save only the filename
+    } else {
+        image = null;
+    }
+
+    const sql = 'INSERT INTO cars (name, price, status, image) VALUES (?, ?, ?, ?)';
+    // Insert the new product into the database
+    db.query(sql , [name, price, status, image], (error, results) => {
+        if (error) {
+            // Handle any error that occurs during the database operation
+            console.error("Error adding vehicle:", error);
+            res.status(500).send('Error adding vehicle');
+        } else {
+            // Send a success response
+            res.redirect('/carInventory');
+        }
+    });
+});
+
+app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
+    // Fetch data from MySQL
+    db.query('SELECT * FROM cars', (error, results) => {
+      if (error) throw error;
+      res.render('carInventory', { cars: results, user: req.session.user });
+    });
+}); 
+
+
 // View Items
+app.get('/car/:id', checkAuthenticated, (req, res) => {
+    const carID = req.params.id;
+    const sql = 'SELECT * FROM cars WHERE carID = ?';
+    
+    db.query(sql, [carID], (err, result) => {
+        if (err) {
+            console.error('Error fetching car details:', err);
+            return res.status(500).send('Error fetching car details');
+        }
+        if (result.length > 0) {
+            res.render('car', { car: result[0], user: req.session.user });
+        } else {
+            res.status(404).send('Car not found');
+        }
+    });
+});
+
 
 // Update Item
 
 // Delete Item
-app.post('/products/delete/:id', (req,res) => {
-    const productId = req.params.id;
+app.post('/car/delete/:id', (req,res) => {
+    const carID = req.params.id;
 
-    const sql = 'DELETE FROM products WHERE id = ?';
-    db.query(sql, [productId], (err, result) => {
+    const sql = 'DELETE FROM cars WHERE carID = ?';
+    db.query(sql, [carID], (err, result) => {
         if (err) {
-            console.error('Error deleting product:', err);
+            console.error('Error deleting car:', err);
             return res.status(500).send('Error deleting');
         }
-        res.redirect('/product'); 
+        res.redirect('/carInventory'); 
     });
 });
 // Search/Filter items
+app.get('/rental', checkAuthenticated, (req, res) => {
+    db.query('SELECT * FROM cars WHERE status = "available"', (error, results) => {
+        if (error) throw error;
+        res.render('rental', { cars: results, user: req.session.user });
+    });
+});
+
+
 
 // Starting the server
 app.listen(3000, () => {

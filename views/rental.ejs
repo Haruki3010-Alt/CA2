@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <title>C237 Car Rental</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">C237 Car Rental</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/cart">View Cart</a>
+            </li> 
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li> 
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  <div class="container">
+    <p>Welcome, <%= user.name %> (<%= user.roles %>)</p>
+    <br>
+    <div class="text-center"><h2>Cars from C237 Car Rental</h2></div>
+    <br>
+    <table class="table table-hover small text-center">
+      <thead>
+          <tr>
+            <th width="100">Car Name</th>
+            <th width="50">Car Price</th>
+            <th width="50">Car Status</th>
+            <th width="100">Car Image</th>
+            <th width="50">Rent</th>
+          </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i < car.length; i++) { %>
+          <tr>
+            <td><a href="/car/<%= car[i].carID %>" ><%= car[i].name %></a></td>
+            <td>$<%= car[i].price.toFixed(2) %></td>
+            <td><%= car[i].status %></td>
+            <td><img src = "images/<%= car[i].image %>" width="20%"></td>
+        
+
+            <td>
+              <select class="form-control" onchange="document.getElementById('quantity-<%= car[i].cardID %>').value = this.value">
+                <% for (let q = 1; q <= 5; q++) { %>
+                  <option value="<%= q %>"><%= q %></option>
+                <% } %>
+              </select>
+            </td>
+<!---->
+            <td>
+                <form action="/add-to-cart/<%= car[i].carID %>" method="POST">
+                  <input type="hidden" name="quantity" id="quantity-<%= car[i].carID %>" value="1">
+                  <button type="submit" class="btn btn-primary mt-3">Rent</button>
+                </form>
+            </td>
+
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

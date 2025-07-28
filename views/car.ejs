@@ -1,4 +1,4 @@
-<!-- product.ejs -->
+<!-- car.ejs -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <title>Supermarket App</title>
+    <title>C237 Car Rental</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">Supermarket App</a>
+          <a class="navbar-brand" href="/">C237 Car Rental</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -20,10 +20,10 @@
             <ul class="navbar-nav">
               <% if (user.role === "admin") { %>
                 <li class="nav-item">
-                  <a class="nav-link" href="/inventory">Inventory</a>
+                  <a class="nav-link" href="/carInventory">Inventory</a> 
                 </li> 
                 <li class="nav-item">
-                  <a class="nav-link" href="/addProduct">Add new product</a>
+                  <a class="nav-link" href="/addCar">Add new Car</a>
                 </li> 
               <% } %>
               <li class="nav-item">
@@ -35,27 +35,29 @@
     </nav>
 
     <div class="container">
-        <p>Welcome, <%= user.username %> (<%= user.role %>)</p>
+        <p>Welcome, <%= user.name %> (<%= user.roles %>)</p>
         <br>
-        <div class="text-center"><h2>Product Details</h2></div>
+        <div class="text-center"><h2>Car Details</h2></div>
         <br>
-        <% if (product) { %> <!-- Check if product data exists -->
+        <% if (car) { %> <!-- Check if car data exists -->
             <div>
-                <p><b>Product Name:</b><br> <%= product.productName %></p>
-                <p><b>Product Image:</b><br> <img src = "../images/<%= product.image %>" width="20%"></p>
-                <p><b>Product Quantity:</b><br> <%= product.quantity %></p>
-                <p><b>Price:</b><br> $<%= product.price.toFixed(2) %></p> 
+                <p><b>Car Name:</b><br> <%= car.name %></p>
+                <p><b>Car Price:</b><br> $<%= car.price.toFixed(2) %></p> 
+                <p><b>Car Status:</b><br> <%= car.status %></p>
+                <p><b>Car Image:</b><br> <img src = "../images/<%= car.image %>" width="20%"></p>
+                
+               
             </div>
         <% } else { %>
-            <p>No product found.</p>
+            <p>No Car found.</p>
         <% } %>
         <% if (user.role === "admin") { %>
-          <a href ="/inventory">Back</a>
-          <form action="'/products/delete/<%= product.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this product?');">
-            <button type="submit" class="btn btn-danger">Delete Product</button>
+          <a href ="/carInventory">Back</a>
+          <form action="'/car/delete/<%= car.carID %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this Car detail?');">
+            <button type="submit" class="btn btn-danger">Delete Car</button>
           </form> 
         <% } else { %>
-          <a href ="/shopping">Back</a>
+          <a href ="/rental">Back</a>
         <% } %>
     </div>
     
