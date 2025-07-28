@@ -273,7 +273,7 @@ app.post('/car/updateCar/:id', checkAuthenticated, checkAdmin, upload.single('im
 
 
 // Delete Item
-app.post('/car/delete/:id', (req,res) => {
+app.post('/car/deleteCar/:id', (req,res) => {
     const carID = req.params.id;
 
     const sql = 'DELETE FROM cars WHERE carID = ?';
