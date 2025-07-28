@@ -266,12 +266,21 @@ app.post('/car/delete/:id', (req,res) => {
 });
 // Search/Filter items
 app.get('/rental', checkAuthenticated, (req, res) => {
-    db.query('SELECT * FROM cars WHERE status = "available"', (error, results) => {
+    const search = req.query.search;
+
+    let sql = 'SELECT * FROM cars WHERE status = "available"';
+    let params = [];
+
+    if (search) {
+        sql += ' AND name LIKE ?';
+        params.push('%' + search + '%');
+    }
+
+    db.query(sql, params, (error, results) => {
         if (error) throw error;
-        res.render('rental', { car: results, user: req.session.user });
+        res.render('rental', { car: results, user: req.session.user, search: search || '' });
     });
 });
-
 
 
 // Starting the server
