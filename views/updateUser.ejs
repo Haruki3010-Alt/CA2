@@ -70,6 +70,14 @@
         <input type="text" class="form-control" id="license" name="license" value="<%= user.license %>" required>
       </div>
 
+      <div class="mb-3">
+        <label for="roles" class="form-label">Roles</label>
+        <select id="roles" name="roles" class="form-control" required>
+            <option value="user">>User</option>
+            <option value="admin">>Admin</option>
+        </select>
+      </div>
+
       <div class="d-grid gap-2">
         <button type="submit" class="btn btn-primary">Update User</button>
         <a href="/useradmin" class="btn btn-secondary">Back to UserAdmin</a>
