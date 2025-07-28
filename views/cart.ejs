@@ -51,13 +51,13 @@
               <td>$<%= cartItems[i].price.toFixed(2) %></td>
               <td><%= cartItems[i].quantity %></td>
               <td>
-                <form action="/cart/remove/<%= cartItems[i].carID %>" method="POST">
+              <form action="/cart/remove/<%= cartItems[i].carID %>" method="POST">
                   <button class="btn btn-danger btn-sm">Remove</button>
-                </form>
-               <form action="/cart/update/<%= cartItems[i].carID %>" method="POST" class="d-flex mt-2">
-                    <input type="number" name="quantity" value="<%= cartItems[i].quantity %>" min="1" class="form-control" style="width: 70px; margin-right: 5px;">
-                    <button type="submit" class="btn btn-sm btn-warning">Update</button>
-                </form>
+              </form>
+              <form action="/cart/update/<%= cartItems[i].carID %>" method="POST" class="d-flex">
+                  <input type="number" name="quantity" value="<%= cartItems[i].quantity %>" min="1" class="form-control" style="width: 70px; margin-right: 5px;">
+                  <button type="submit" class="btn btn-sm btn-warning">Update</button>
+              </form>
               </td>
             </tr>
           <% } %>

@@ -425,6 +425,23 @@ app.post('/cart/remove/:id', checkAuthenticated, (req, res) => {
     res.redirect('/cart');
 });
 
+app.post('/cart/update/:id', checkAuthenticated, (req, res) => {
+    const carID = parseInt(req.params.id);
+    const newQuantity = parseInt(req.body.quantity);
+
+    if (req.session.cart) {
+        for (let i = 0; i < req.session.cart.length; i++) {
+            if (req.session.cart[i].carID === carID) {
+                req.session.cart[i].quantity = newQuantity;
+                break;
+            }
+        }
+    }
+
+    res.redirect('/cart');
+});
+
+
 app.post('/checkout', checkAuthenticated, (req, res) => {
     // You can log rentals to DB here later
     req.session.cart = [];
