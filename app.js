@@ -198,6 +198,44 @@ app.get('/car/:id', checkAuthenticated, (req, res) => {
 
 
 // Update Item
+app.get('/car/edit/:id', checkAuthenticated, checkAdmin, (req, res) => {
+    const carID = req.params.id;
+    const sql = 'SELECT * FROM cars WHERE carID = ?';
+
+    db.query(sql, [carID], (err, result) => {
+        if (err) {
+            console.error('Error fetching car for edit:', err);
+            return res.status(500).send('Error fetching car details');
+        }
+        if (result.length > 0) {
+            res.render('editCar', { car: result[0], user: req.session.user });
+        } else {
+            res.status(404).send('Car not found');
+        }
+    });
+});
+
+app.post('/car/edit/:id', checkAuthenticated, checkAdmin, upload.single('image'), (req, res) => {
+    const carID = req.params.id;
+    const { name, price, status } = req.body;
+    let image = req.file ? req.file.filename : null;
+
+    const sql = image
+        ? 'UPDATE cars SET name = ?, price = ?, status = ?, image = ? WHERE carID = ?'
+        : 'UPDATE cars SET name = ?, price = ?, status = ? WHERE carID = ?';
+
+    const params = image
+        ? [name, price, status, image, carID]
+        : [name, price, status, carID];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            console.error('Error updating car:', err);
+            return res.status(500).send('Error updating car');
+        }
+        res.redirect('/carInventory');
+    });
+});
 
 // Delete Item
 app.post('/car/delete/:id', (req,res) => {
