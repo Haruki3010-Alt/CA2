@@ -34,8 +34,12 @@
       <button class="btn btn-outline-primary" type="submit">Search</button>
     </div>
   </form>
-
   <div class="container">
+    <% if (messages && messages.length > 0) { %>
+      <div class="alert alert-success">
+        <%= messages[0] %>
+      </div>
+    <% } %>  
     <p>Welcome, <%= user.username %> (<%= user.roles %>)</p>
     <br>
     <div class="text-center"><h2>Cars from C237 Car Rental</h2></div>
