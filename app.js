@@ -348,7 +348,7 @@ app.get('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
 });
 
 
-app.post('/car/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
+app.post('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
     const id = req.params.id;
     const { username, email, address, contact, license, roles } = req.body;
 
