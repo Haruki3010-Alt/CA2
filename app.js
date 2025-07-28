@@ -227,6 +227,11 @@ app.get('/car/:id', checkAuthenticated, (req, res) => {
 app.get('/car/updateCar/:id', checkAuthenticated, checkAdmin, (req, res) => {
     const carID = req.params.id;
     const sql = 'SELECT * FROM cars WHERE carID = ?';
+    if (search) {
+        sql += ' AND name LIKE ?';
+        params.push('%' + search + '%');
+    }
+
 
     db.query(sql, [carID], (err, result) => {
         if (err) {
@@ -234,12 +239,13 @@ app.get('/car/updateCar/:id', checkAuthenticated, checkAdmin, (req, res) => {
             return res.status(500).send('Error fetching car details');
         }
         if (result.length > 0) {
-            res.render('updateCar', { car: result[0], user: req.session.user });
+            res.render('updateCar', { car: result[0], user: req.session.user, search: search || '' });
         } else {
             res.status(404).send('Car not found');
         }
     });
 });
+
 
 app.post('/car/updateCar/:id', checkAuthenticated, checkAdmin, upload.single('image'), (req, res) => {
     const carID = req.params.id;
@@ -262,6 +268,8 @@ app.post('/car/updateCar/:id', checkAuthenticated, checkAdmin, upload.single('im
         res.redirect('/carInventory');
     });
 });
+
+
 
 // Delete Item
 app.post('/car/delete/:id', (req,res) => {
@@ -293,6 +301,7 @@ app.get('/rental', checkAuthenticated, (req, res) => {
         res.render('rental', { car: results, user: req.session.user, search: search || '' });
     });
 });
+
 
 
 
