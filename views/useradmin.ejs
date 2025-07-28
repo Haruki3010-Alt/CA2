@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <title>C237 Car Rental</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">C237 Car Rental</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/addCar">Add Car</a>
+            </li> 
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li> 
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+  <form method="get" action="/carInventory" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="search" class="form-control" placeholder="Search for another car..." value="<%= search || '' %>">
+    <button class="btn btn-outline-primary" type="submit">Search</button>
+   </div>
+  </form>  
+
+  <div class="container">
+    <p>Welcome, <%= user.username %> (<%= user.roles %>)</p>
+    <br>
+    <div class="text-center"><h2>Cars from C237 Car Rental Database</h2></div>
+    <br>
+    <table class="table table-hover small text-center">
+      <thead>
+          <tr>
+            <th width="100">Username</th>
+            <th width="100">Email</th>
+            <th width="50">Contact</th>
+            <th width="50">Address</th>
+            <th width="50">License Number</th>
+            <th width="50">Role</th>
+            <th width ="50">Edit</th>
+            <th width="50">Delete</th>
+          </tr>
+      </thead>
+      <tbody>
+        <% for(let i=0; i < cars.length; i++) { %>
+          <tr>
+            <td><%= users[i].name %></td>
+            <td><%= users[i].email %></td>
+            <td><%= users[i].contact %></td>
+            <td><%= users[i].address %></td>
+            <td><%= users[i].licenseNumber %></td>
+            <td><%= users[i].roles %></td>
+            <!-- Edit Link -->
+            <td><a href="/car/updateCar/<%= cars[i].carID %>">Edit</a></td>
+            <!-- Delete Link -->
+            <td><a href="/car/deleteCar/<%= cars[i].carID %>" onclick="return confirm('Are you sure you want to delete this car?')">Delete</a></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
