@@ -325,18 +325,24 @@ app.get('/useradmin', checkAuthenticated, checkAdmin, (req, res) => {
 });
 
 app.get('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
+    const search = req.query.search;
     const id = req.params.id;
     const sql = 'SELECT * FROM users WHERE id = ?';
+    if (search) {
+        sql += ' AND name LIKE ?';
+        params.push('%' + search + '%');
+    }
+
 
     db.query(sql, [id], (err, result) => {
         if (err) {
-            console.error('Error fetching user for edit:', err);
-            return res.status(500).send('Error fetching user details');
+            console.error('Error fetching car for edit:', err);
+            return res.status(500).send('Error fetching car details');
         }
         if (result.length > 0) {
-            res.render('updateUser', { users: result[0], user: req.session.user });
+            res.render('updateUser', { users: result[0], user: req.session.user, search: search || '' });
         } else {
-            res.status(404).send('User not found');
+            res.status(404).send('Car not found');
         }
     });
 });
