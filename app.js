@@ -184,12 +184,24 @@ app.post('/addCar', upload.single('image'),  (req, res) => {
 });
 
 app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
-    // Fetch data from MySQL
-    db.query('SELECT * FROM cars', (error, results) => {
-      if (error) throw error;
-      res.render('carInventory', { cars: results, user: req.session.user });
+    const search = req.query.search;
+    let sql = 'SELECT * FROM cars';
+    let params = [];
+
+    if (search) {
+        sql += ' WHERE name LIKE ?';
+        params.push('%' + search + '%');
+    }
+
+    db.query(sql, params, (error, results) => {
+        if (error) throw error;
+        res.render('carInventory', {
+            cars: results,
+            user: req.session.user,
+            search: search || ''
+        });
     });
-}); 
+});
 
 
 // View Items
@@ -282,25 +294,7 @@ app.get('/rental', checkAuthenticated, (req, res) => {
     });
 });
 
-app.get('/carInventory', checkAuthenticated, checkAdmin, (req, res) => {
-    const search = req.query.search;
-    let sql = 'SELECT * FROM cars';
-    let params = [];
 
-    if (search) {
-        sql += ' WHERE name LIKE ?';
-        params.push('%' + search + '%');
-    }
-
-    db.query(sql, params, (error, results) => {
-        if (error) throw error;
-        res.render('carInventory', {
-            cars: results,
-            user: req.session.user,
-            search: search || ''
-        });
-    });
-});
 
 
 
