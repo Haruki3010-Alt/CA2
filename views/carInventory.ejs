@@ -27,6 +27,13 @@
       </div>
     </nav>
 
+  <form method="get" action="/carInventory" class="mb-4">
+    <div class="input-group">
+      <input type="text" name="search" class="form-control" placeholder="Search for another car..." value="<%= search || '' %>">
+    <button class="btn btn-outline-primary" type="submit">Search</button>
+   </div>
+  </form>  
+
   <div class="container">
     <p>Welcome, <%= user.username %> (<%= user.roles %>)</p>
     <br>
