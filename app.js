@@ -374,12 +374,14 @@ app.post('/deleteUser/:id', (req,res) => {
 
 // Cart
 app.get('/cart', checkAuthenticated, (req, res) => {
-    const cart = req.session.cart || [];
+    const messages = req.flash('success');
     res.render('cart', {
-        cartItems: cart,
-        user: req.session.user
+        cartItems: req.session.cart || [],
+        user: req.session.user,
+        messages
     });
 });
+
 
 app.post('/add-to-cart/:id', checkAuthenticated, (req, res) => {
     const carID = parseInt(req.params.id);
