@@ -327,7 +327,7 @@ app.get('/updateUser/:id', checkAuthenticated, checkAdmin, (req, res) => {
             return res.status(500).send('Error fetching car details');
         }
         if (result.length > 0) {
-            res.render('updateUser', { users: result[0], user: req.session.user });
+            res.render('updateUser', { users: result[0], user: req.session.user});
         } else {
             res.status(404).send('Car not found');
         }
