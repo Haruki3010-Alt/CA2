@@ -299,8 +299,7 @@ app.get('/rental', checkAuthenticated, (req, res) => {
 
     db.query(sql, params, (error, results) => {
         if (error) throw error;
-        res.render('rental', { car: results, user: req.session.user, search: search || '' });
-    });
+        res.render('rental', { car: results, user: req.session.user, search: search || '',messages: req.flash('success')});});
 });
 
 //Useradmin Panel
@@ -377,6 +376,86 @@ app.post('/deleteUser/:id', (req,res) => {
         res.redirect('/useradmin'); 
     });
 });
+
+// Cart
+app.get('/cart', checkAuthenticated, (req, res) => {
+    const messages = req.flash('success');
+    res.render('cart', {
+        cartItems: req.session.cart || [],
+        user: req.session.user,
+        messages
+    });
+});
+
+
+app.post('/add-to-cart/:id', checkAuthenticated, (req, res) => {
+    const carID = parseInt(req.params.id);
+    const quantity = parseInt(req.body.quantity) || 1;
+
+    const sql = 'SELECT * FROM cars WHERE carID = ?';
+    db.query(sql, [carID], (err, results) => {
+        if (err || results.length === 0) {
+            return res.status(500).send('Car not found');
+        }
+
+        const car = results[0];
+
+        if (!req.session.cart) {
+            req.session.cart = [];
+        }
+
+        const existingIndex = req.session.cart.findIndex(item => item.carID === carID);
+        if (existingIndex !== -1) {
+            req.session.cart[existingIndex].quantity += quantity;
+        } else {
+            req.session.cart.push({
+                carID: car.carID,
+                name: car.name,
+                price: car.price,
+                image: car.image,
+                quantity: quantity
+            });
+        }
+
+        res.redirect('/cart');
+    });
+});
+
+
+app.post('/cart/remove/:id', checkAuthenticated, (req, res) => {
+    const carID = parseInt(req.params.id);
+
+    if (req.session.cart) {
+        req.session.cart = req.session.cart.filter(item => item.carID !== carID);
+    }
+
+    res.redirect('/cart');
+});
+
+app.post('/cart/update/:id', checkAuthenticated, (req, res) => {
+    const carID = parseInt(req.params.id);
+    const newQuantity = parseInt(req.body.quantity);
+
+    if (req.session.cart) {
+        for (let i = 0; i < req.session.cart.length; i++) {
+            if (req.session.cart[i].carID === carID) {
+                req.session.cart[i].quantity = newQuantity;
+                break;
+            }
+        }
+    }
+
+    res.redirect('/cart');
+});
+
+
+app.post('/checkout', checkAuthenticated, (req, res) => {
+    // You can log rentals to DB here later
+    req.session.cart = [];
+    req.flash('success', 'Rental confirmed!');
+    res.redirect('/rental');
+});
+
 
 
 // Starting the server

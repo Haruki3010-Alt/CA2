@@ -60,7 +60,7 @@
         
 
             <td>
-              <select class="form-control" onchange="document.getElementById('quantity-<%= car[i].cardID %>').value = this.value">
+              <select class="form-control" onchange="document.getElementById('quantity-<%= car[i].carID %>').value = this.value">
                 <% for (let q = 1; q <= 5; q++) { %>
                   <option value="<%= q %>"><%= q %></option>
                 <% } %>
@@ -73,7 +73,6 @@
                   <button type="submit" class="btn btn-primary mt-3">Rent</button>
                 </form>
             </td>
-
           </tr>
         <% } %>
       </tbody>
